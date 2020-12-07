@@ -1,0 +1,15 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#2C2C2C</item>
+
+        <item name="android:windowAnimationStyle">@style/CustomActivityAnimation</item>
+
+    </style>
+    <style name="CustomActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_down</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_up</item>
+
+    </style>
+</resources>
