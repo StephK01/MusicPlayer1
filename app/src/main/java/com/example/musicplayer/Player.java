@@ -33,11 +33,13 @@ public class Player extends AppCompatActivity {
     Handler handler = new Handler();
     Uri uri;
     int position = -1;
-    boolean isShuffleEnabled = false;
-    boolean isLoopEnabled = false;
+    //boolean isShuffleEnabled = false;
+    //boolean isLoopEnabled = false;
     static ArrayList<Music> songList = new ArrayList<>();
 
-    @Override
+
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_layout);
@@ -58,11 +60,11 @@ public class Player extends AppCompatActivity {
         shuffle_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isShuffleEnabled) {
-                    isShuffleEnabled = false;
+                if (((MyApplication) Player.this.getApplication()).GetShuffleBoolean()) {
+                    ((MyApplication) Player.this.getApplication()).SetShuffleBoolean(false);
                     shuffle_btn.setImageResource(R.drawable.shuffle);
                 } else {
-                    isShuffleEnabled = true;
+                    ((MyApplication) Player.this.getApplication()).SetShuffleBoolean(true);
                     shuffle_btn.setImageResource(R.drawable.shuffle_on);
                 }
             }
@@ -71,8 +73,8 @@ public class Player extends AppCompatActivity {
         repeat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoopEnabled) {
-                    isLoopEnabled = false;
+                if (((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
+                    ((MyApplication) Player.this.getApplication()).SetRepeatBoolean(false);
                     repeat_btn.setImageResource(R.drawable.repeat);
                     mediaPlayer.setLooping(false);
                 } else {
@@ -80,7 +82,7 @@ public class Player extends AppCompatActivity {
                         mediaPlayer.start();
                         play_pause.setImageResource(R.drawable.pause1);
                     }
-                    isLoopEnabled = true;
+                    ((MyApplication) Player.this.getApplication()).SetRepeatBoolean(true);
                     repeat_btn.setImageResource(R.drawable.repeat_on);
                     mediaPlayer.setLooping(true);
                 }
@@ -152,10 +154,10 @@ public class Player extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (mp != null && !isLoopEnabled && !isShuffleEnabled) {
+                if (mp != null && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean() && !((MyApplication) Player.this.getApplication()).GetShuffleBoolean()) {
                     play_pause.setImageResource(R.drawable.play1);
                     mp.pause();
-                } else if (mp != null && isShuffleEnabled && !isLoopEnabled) {
+                } else if (mp != null && ((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
                     mp.stop();
                     mp.release();
                     position = getRandom(songList.size() - 1);
@@ -167,9 +169,9 @@ public class Player extends AppCompatActivity {
     }
 
     public int getPosition() {
-        if (isShuffleEnabled && !isLoopEnabled) {
+        if (((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
             position = getRandom(songList.size() - 1);
-        } else if (!isShuffleEnabled && !isLoopEnabled) {
+        } else if (!((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
             position = ((position - 1) < 0 ? (songList.size() - 1) : (position - 1));
         }
         return position;
@@ -228,12 +230,12 @@ public class Player extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (mp != null && !isLoopEnabled && !isShuffleEnabled) {
+                if (mp != null && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean() && !((MyApplication) Player.this.getApplication()).GetShuffleBoolean()) {
                     play_pause.setImageResource(R.drawable.play1);
                     mp.pause();
                         /*mp.release();
                         mp = null;*/
-                } else if (mp != null && isShuffleEnabled) {
+                } else if (mp != null && ((MyApplication) Player.this.getApplication()).GetShuffleBoolean()) {
                     mp.stop();
                     mp.release();
                     position = getRandom(songList.size() - 1);
@@ -306,18 +308,18 @@ public class Player extends AppCompatActivity {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
-            if (isShuffleEnabled && !isLoopEnabled) {
+            if (((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
                 position = getRandom(songList.size() - 1);
-            } else if (!isShuffleEnabled && !isLoopEnabled) {
+            } else if (!((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
                 position = ((position + 1) % songList.size());
             }
             initialiseMediaPlayer(true);
         } else {
             mediaPlayer.stop();
             mediaPlayer.release();
-            if (isShuffleEnabled && !isLoopEnabled) {
+            if (((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
                 position = getRandom(songList.size() - 1);
-            } else if (!isShuffleEnabled && !isLoopEnabled) {
+            } else if (!((MyApplication) Player.this.getApplication()).GetShuffleBoolean() && !((MyApplication) Player.this.getApplication()).GetRepeatBoolean()) {
                 position = ((position + 1) % songList.size());
             }
             initialiseMediaPlayer(false);
